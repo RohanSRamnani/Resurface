@@ -1,9 +1,5 @@
 import SwiftUI
 
-enum Theme {
-    static let accent = Color(red: 0.36, green: 0.36, blue: 0.84)
-}
-
 /// Where a saved thing came from. Detected from the URL host, so grouping needs no manual work.
 enum Source: String, CaseIterable, Codable {
     case twitter, tiktok, instagram, reddit, youtube, discord, linkedin, threads, web, screenshot, note

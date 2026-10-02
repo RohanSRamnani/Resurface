@@ -26,7 +26,9 @@ targets:
       path: App/Info.plist
       properties:
         CFBundleDisplayName: Resurface
-        UILaunchScreen: {}
+        UIUserInterfaceStyle: Dark
+        UILaunchScreen:
+          UIColorName: LaunchBackground
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
@@ -54,6 +56,7 @@ targets:
       path: ShareExtension/Info.plist
       properties:
         CFBundleDisplayName: Resurface
+        UIUserInterfaceStyle: Dark
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController

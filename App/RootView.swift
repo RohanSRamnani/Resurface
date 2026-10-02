@@ -21,6 +21,7 @@ struct RootView: View {
                 OnboardingView()
             }
         }
+        .background(Theme.background.ignoresSafeArea())
         .sheet(item: $router.presented) { ItemSheet(item: $0) }
         .onOpenURL { url in
             // Widget taps arrive as resurface://open/<uuid>.
@@ -39,6 +40,16 @@ struct RootView: View {
 
 struct MainTabs: View {
     @Binding var tab: Int
+
+    init(tab: Binding<Int>) {
+        _tab = tab
+        let bar = UITabBarAppearance()
+        bar.configureWithOpaqueBackground()
+        bar.backgroundColor = UIColor(Theme.background)
+        bar.shadowColor = UIColor(Theme.border)
+        UITabBar.appearance().standardAppearance = bar
+        UITabBar.appearance().scrollEdgeAppearance = bar
+    }
 
     var body: some View {
         TabView(selection: $tab) {

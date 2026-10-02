@@ -26,6 +26,8 @@ struct ResurfaceApp: App {
                 .environment(settings)
                 .environment(router)
                 .tint(Theme.accent)
+                .fontDesign(.rounded)
+                .preferredColorScheme(.dark)
         }
         .modelContainer(container)
     }

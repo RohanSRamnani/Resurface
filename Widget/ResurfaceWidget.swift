@@ -15,9 +15,9 @@ struct QueueEntry: TimelineEntry {
 
 struct QueueProvider: TimelineProvider {
     func placeholder(in context: Context) -> QueueEntry {
-        QueueEntry(date: .now, count: 3, rows: [
+        QueueEntry(date: .now, count: 4, rows: [
             .init(id: UUID(), title: "How to Do Great Work", source: .web),
-            .init(id: UUID(), title: "The 5-minute pasta", source: .tiktok),
+            .init(id: UUID(), title: "15-minute crispy gnocchi, one pan", source: .tiktok),
         ])
     }
 
@@ -49,21 +49,36 @@ struct WidgetView: View {
             default: small
             }
         }
-        .containerBackground(.fill.tertiary, for: .widget)
+        .fontDesign(.rounded)
+        .containerBackground(for: .widget) {
+            ZStack {
+                Theme.background
+                RadialGradient(colors: [.white.opacity(0.10), .clear], center: .topLeading, startRadius: 0, endRadius: 180)
+            }
+        }
     }
 
-    private func link(_ row: QueueEntry.Row?) -> URL { URL(string: "resurface://open/\(row?.id.uuidString ?? "")")! }
+    private func link(_ row: QueueEntry.Row) -> URL { URL(string: "resurface://open/\(row.id.uuidString)")! }
+
+    private var count: some View {
+        Text("\(entry.count)").font(.system(size: 44, weight: .bold)).foregroundStyle(.white)
+    }
+
+    private func caption(_ text: String) -> some View {
+        Text(text.uppercased()).font(.caption2.weight(.semibold)).tracking(1).foregroundStyle(Theme.textSecondary)
+    }
 
     private var small: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             if let first = entry.rows.first {
-                Text("\(entry.count)").font(.system(size: 44, weight: .bold, design: .rounded)).foregroundStyle(Theme.accent)
-                Text("waiting").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
-                Spacer(minLength: 2)
-                Text(first.title).font(.footnote).lineLimit(3)
+                count
+                caption("Waiting")
+                Spacer(minLength: 6)
+                Text(first.title).font(.footnote.weight(.medium)).foregroundStyle(.white).lineLimit(3)
             } else {
-                Image(systemName: "checkmark.circle.fill").font(.largeTitle).foregroundStyle(.green)
-                Text("All caught up").font(.footnote.weight(.semibold))
+                Image(systemName: "checkmark.circle.fill").font(.largeTitle).foregroundStyle(Theme.on)
+                Spacer(minLength: 6)
+                Text("All caught up").font(.footnote.weight(.semibold)).foregroundStyle(.white)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -72,18 +87,25 @@ struct WidgetView: View {
 
     private var medium: some View {
         HStack(alignment: .top, spacing: 16) {
-            VStack(alignment: .leading) {
-                Text("\(entry.count)").font(.system(size: 44, weight: .bold, design: .rounded)).foregroundStyle(Theme.accent)
-                Text(entry.count == 0 ? "all caught up" : "waiting").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 2) {
+                count
+                caption(entry.count == 0 ? "All clear" : "Waiting")
             }
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 10) {
                 ForEach(entry.rows.prefix(2)) { row in
                     Link(destination: link(row)) {
-                        HStack(spacing: 8) {
-                            Image(systemName: row.source.symbol).foregroundStyle(row.source.color).frame(width: 18)
-                            Text(row.title).font(.footnote).lineLimit(2).foregroundStyle(.primary)
+                        HStack(spacing: 10) {
+                            Image(systemName: row.source.symbol)
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(row.source.color)
+                                .frame(width: 26, height: 26)
+                                .background(row.source.color.opacity(0.16), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                            Text(row.title).font(.footnote.weight(.medium)).foregroundStyle(.white).lineLimit(2)
                         }
                     }
+                }
+                if entry.rows.isEmpty {
+                    Text("Share anything to Resurface and it'll wait here.").font(.footnote).foregroundStyle(Theme.textSecondary)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -92,7 +114,7 @@ struct WidgetView: View {
 
     private var lockScreen: some View {
         VStack(alignment: .leading) {
-            Label("\(entry.count) waiting", systemImage: "tray.full").font(.headline)
+            Label("\(entry.count) waiting", systemImage: "arrow.up.circle").font(.headline)
             Text(entry.rows.first?.title ?? "All caught up").font(.caption).lineLimit(2)
         }
         .widgetURL(entry.rows.first.map(link))

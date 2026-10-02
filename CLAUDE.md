@@ -12,11 +12,17 @@ iOS app: save links/screenshots/text from any app via the share sheet, get nudge
 - `App/` SwiftUI app. `ShareExtension/` thin UIKit shell around `ShareIngest`. `Widget/` WidgetKit. `Tests/` unit tests.
 - Data: one SwiftData store in App Group `group.com.rohan.resurface`; falls back to Application Support if the group isn't provisioned.
 
+## Design
+- Dark-only, Mirror's tokens (`Shared/Theme.swift`): glass cards, SF Rounded, white accent, green only on toggles. Cross-project rules: `../brain/lessons/design-language.md`, `../brain/lessons/look-before-handoff.md`.
+- Signature: oldest queue item rises into the big "Up next" card.
+- Before handing off UI: launch with `-resetData -skipOnboarding -seedDemo` (+ `-tab N`, `-onboardingPage N`), screenshot each screen with `xcrun simctl io booted screenshot`, and look.
+
 ## Gotchas
 - Share extension writes from another process: `RootView` bumps `.id(refresh)` on foreground so `@Query` re-fetches. Keep tab selection above that `.id` or it resets.
 - Use `NSItemProvider.loadObject`, not `loadItem`: `loadItem` returns different types per sender and silently dropped URLs/text in tests.
 - Nudges are local notifications planned 14 days ahead and rebuilt on every change; nothing is scheduled when the queue is empty.
 - Bundle ids and App Group need the team set in `project.yml` (`DEVELOPMENT_TEAM`) to run on a real device.
+- Brainmaxxing skills live in `.agents/skills`; `.claude/skills` is a symlink to it so Claude Code finds them.
 - Not yet verified by hand: the real iOS share sheet, adding the widget, notification delivery. Unit tests and simulator screenshots cover the rest.
 
 # Brain

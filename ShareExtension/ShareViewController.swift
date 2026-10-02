@@ -18,17 +18,19 @@ struct ShareConfirmation: View {
                 ProgressView()
                 Text("Saving…")
             case .saved(let what):
-                Image(systemName: "checkmark.circle.fill").font(.system(size: 40)).foregroundStyle(.green)
+                Image(systemName: "checkmark.circle.fill").font(.system(size: 40)).foregroundStyle(Theme.on)
                 Text(what).font(.headline)
-                Text("We'll remind you when you're free.").font(.footnote).foregroundStyle(.secondary)
+                Text("We'll bring it back when you're free.").font(.footnote).foregroundStyle(Theme.textSecondary)
             case .failed(let message):
                 Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 40)).foregroundStyle(.orange)
                 Text(message).font(.headline).multilineTextAlignment(.center)
             }
         }
+        .foregroundStyle(.white)
+        .fontDesign(.rounded)
         .padding(28)
         .frame(width: 260)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .glassCard(radius: Theme.radiusLarge, glow: true)
     }
 }
 
@@ -39,7 +41,8 @@ final class ShareViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.25)
+        overrideUserInterfaceStyle = .dark
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.35)
         let host = UIHostingController(rootView: ShareConfirmation(model: model))
         host.view.backgroundColor = .clear
         addChild(host)
