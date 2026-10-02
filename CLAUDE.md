@@ -18,3 +18,12 @@ iOS app: save links/screenshots/text from any app via the share sheet, get nudge
 - Nudges are local notifications planned 14 days ahead and rebuilt on every change; nothing is scheduled when the queue is empty.
 - Bundle ids and App Group need the team set in `project.yml` (`DEVELOPMENT_TEAM`) to run on a real device.
 - Not yet verified by hand: the real iOS share sheet, adding the widget, notification delivery. Unit tests and simulator screenshots cover the rest.
+
+# Brain
+
+The `brain/` directory is an Obsidian vault — persistent memory across sessions.
+
+- **Read first.** Read brain files relevant to your task before acting.
+- **Write** after mistakes, corrections, or notable codebase learnings.
+- **Structure:** One topic per file. Directories with `[[wikilink]]` indexes — no inlined content.
+- **Maintain:** Delete outdated notes and stale artifacts.
